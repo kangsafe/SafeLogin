@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ 	<!-- 请替换成在语音云官网申请的appid -->
+    <string name="app_id">58c0ab3f</string>
+    <string name="app_name">IsvDemo</string>
+    <string name="demo_introduction">讯飞声纹服务提供文本和数字两种类型的声纹密码。本示例中通过详尽的演示代码和注释，帮助开发者快速集成SDK。</string>
+</resources>

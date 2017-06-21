@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" 
+    android:padding="10dp" >
+    
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:text="讯飞人脸识别示例"
+        android:textSize="30sp" />
+
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+        
+        <Button
+	        android:id="@+id/btn_online_demo"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="5dp"
+	        android:layout_centerInParent="true"
+	        android:text="在线人脸示例" 
+	        android:textSize="20sp"/>
+        
+        <Button
+	        android:id="@+id/btn_offline_demo"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="5dp"
+	        android:layout_centerInParent="true"
+	        android:text="离线人脸示例" 
+	        android:textSize="20sp"/>
+        
+        <Button
+	        android:id="@+id/btn_video_demo"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="5dp"
+	        android:layout_centerInParent="true"
+	        android:text="视频检测示例" 
+	        android:textSize="20sp"/>
+        
+    </LinearLayout>
+
+</RelativeLayout>
