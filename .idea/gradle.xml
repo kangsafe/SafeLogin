@@ -8,6 +8,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/FacePrintDemo" />
+            <option value="$PROJECT_DIR$/VoicePrintDemo" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
