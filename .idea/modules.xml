@@ -4,8 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FacePrintDemo/FacePrintDemo.iml" filepath="$PROJECT_DIR$/FacePrintDemo/FacePrintDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/FingerPrintDemo.iml" filepath="$PROJECT_DIR$/FingerPrintDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SafeLogin.iml" filepath="$PROJECT_DIR$/SafeLogin.iml" />
       <module fileurl="file://$PROJECT_DIR$/VoicePrintDemo/VoicePrintDemo.iml" filepath="$PROJECT_DIR$/VoicePrintDemo/VoicePrintDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fingerprintdemo/fingerprintdemo.iml" filepath="$PROJECT_DIR$/fingerprintdemo/fingerprintdemo.iml" />
     </modules>
   </component>
 </project>

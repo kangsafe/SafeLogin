@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">FingerPrintDemo</string>
+    <string name="app_name">安全登录</string>
+    <string name="xunfei_app_id">58c0ab3f</string>
 </resources>

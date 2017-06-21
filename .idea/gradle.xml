@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/FacePrintDemo" />
             <option value="$PROJECT_DIR$/VoicePrintDemo" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/fingerprintdemo" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

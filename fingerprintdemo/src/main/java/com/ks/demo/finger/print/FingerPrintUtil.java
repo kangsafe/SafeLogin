@@ -1,4 +1,4 @@
-package com.ks.finger.print;
+package com.ks.demo.finger.print;
 
 /**
  * Created by Admin on 2017/6/20 0020 09:31.

@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ks.safe.login">
+
+    package="com.ks.demo.finger.print">
 
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <application
-        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
