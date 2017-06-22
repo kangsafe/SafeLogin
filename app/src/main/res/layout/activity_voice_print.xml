@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ks.safe.login.voiceprint.VoicePrintActivity">
+
+    <TextView
+        android:id="@+id/voice_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="取消"
+        android:textColor="@color/light_blue" />
+
+    <TextView
+        android:id="@+id/voice_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/voice_close"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:gravity="center_horizontal"
+        android:text="请按住按钮，贴近手机下方\n话筒，匀速读出数字"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/voice_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/voice_tips"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="芝麻开门"
+        android:textSize="30sp" />
+
+    <ImageView
+        android:id="@+id/vvoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:src="@mipmap/icon_voice" />
+</RelativeLayout>

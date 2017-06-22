@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     public static String VOICE = "voice";
     public static String GENITUE = "genisture";
     public static String SAFE_LOGIN_TYPE = "safe_login_type";
+    public static final int REQUEST_FACE = 0;
+    public static final int REQUEST_VOICE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +105,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        vvoice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, CameraActivty.class);
+                    intent.putExtra("isreg", isChecked);
+                    intent.putExtra("authid", "abc123");
+                    startActivityForResult(intent, REQUEST_FACE);
+                } else {
+                    putSetting(VOICE, false);
+                }
+            }
+        });
         //指纹识别
         if (sp.getString(SAFE_LOGIN_TYPE, FINGER).equals(FINGER) && sp.getBoolean(FINGER, false)) {
             new FingerPrintDialog().build(this).setListener(new View.OnClickListener() {
@@ -130,8 +146,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
-    public static final int REQUEST_FACE = 0;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -156,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
                     }
                 }
+                break;
+            case REQUEST_VOICE:
+
                 break;
         }
     }
