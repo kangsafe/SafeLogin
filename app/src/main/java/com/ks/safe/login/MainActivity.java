@@ -1,5 +1,6 @@
 package com.ks.safe.login;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +10,10 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.ks.safe.login.faceprint.CameraActivty;
 import com.ks.safe.login.fingerprint.FingerPrintDialog;
 import com.ks.safe.login.fingerprint.FingerPrintUtil;
+import com.ks.safe.login.fingerprint.FingerprintAlertDialog;
 
 public class MainActivity extends AppCompatActivity {
     Switch vfinger;
@@ -86,6 +89,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        vface.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                putSetting(FACE, isChecked);
+                if (isChecked) {
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, CameraActivty.class);
+                    intent.putExtra("isreg", isChecked);
+                    intent.putExtra("authid", "abc123");
+                    startActivityForResult(intent, REQUEST_FACE);
+                }
+            }
+        });
         //指纹识别
         if (sp.getString(SAFE_LOGIN_TYPE, FINGER).equals(FINGER) && sp.getBoolean(FINGER, false)) {
             new FingerPrintDialog().build(this).setListener(new View.OnClickListener() {
@@ -94,18 +110,52 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }).show();
-        } else if (sp.getString(SAFE_LOGIN_TYPE, FINGER).equals(FACE) && sp.getBoolean(FACE, false)) {
-
+        } else if (sp.getString(SAFE_LOGIN_TYPE, FACE).equals(FACE) && sp.getBoolean(FACE, false)) {
+            Intent intent = new Intent();
+            intent.setClass(this, CameraActivty.class);
+            intent.putExtra("isreg", false);
+            intent.putExtra("authid", "abc123");
+            startActivityForResult(intent, REQUEST_FACE);
         }
     }
 
     private void putSetting(String name, boolean val) {
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(FINGER, val);
+        editor.putBoolean(name, val);
         editor.commit();
     }
 
     private void showMsg(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    public static final int REQUEST_FACE = 0;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_FACE:
+                if (resultCode == RESULT_OK) {
+                    //注册
+                    if (data.getBooleanExtra("isreg", true)) {
+
+                    } else {
+                        new FingerprintAlertDialog(this)
+                                .builder()
+                                .setTitle("刷脸成功")
+                                .setMsg("欢迎主人，宝宝给你请安了^_^")
+                                .setCancelable(false)
+                                .setNegativeButton("我知道了", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                    }
+                                })
+                                .show();
+                    }
+                }
+                break;
+        }
     }
 }

@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.Surface;
 
 import com.ks.safe.login.faceprint.AppConstant;
-import com.ks.safe.login.faceprint.CameraActivity;
+import com.ks.safe.login.faceprint.CameraActivty;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,7 +43,7 @@ public class CameraUtil {
     }
 
     public void camera(Activity activity) {
-        Intent intent = new Intent(activity, CameraActivity.class);
+        Intent intent = new Intent(activity, CameraActivty.class);
         activity.startActivityForResult(intent, AppConstant.REQUEST_CODE.CAMERA);
     }
 

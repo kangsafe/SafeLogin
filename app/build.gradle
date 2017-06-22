@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "com.ks.safe.login"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -19,7 +19,7 @@ android {
     }
     sourceSets {
         main {
-            jniLibs.srcDirs = ['libs', 'src/main/jniLibs']
+            jniLibs.srcDirs = ['libs', 'jniLibs']
         }
     }
 }
