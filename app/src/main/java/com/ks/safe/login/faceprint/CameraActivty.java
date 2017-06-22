@@ -164,6 +164,7 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
         } else {
             showTip("验证失败");
         }
+        startCamera();
     }
 
     private void detect(JSONObject obj) throws JSONException {

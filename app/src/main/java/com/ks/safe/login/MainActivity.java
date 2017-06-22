@@ -14,6 +14,9 @@ import com.ks.safe.login.faceprint.CameraActivty;
 import com.ks.safe.login.fingerprint.FingerPrintDialog;
 import com.ks.safe.login.fingerprint.FingerPrintUtil;
 import com.ks.safe.login.fingerprint.FingerprintAlertDialog;
+import com.ks.safe.login.voiceprint.VoicePrintActivity;
+
+import static com.ks.safe.login.voiceprint.VoicePrintActivity.PWD_TYPE_TEXT;
 
 public class MainActivity extends AppCompatActivity {
     Switch vfinger;
@@ -110,9 +113,11 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     Intent intent = new Intent();
-                    intent.setClass(MainActivity.this, CameraActivty.class);
+                    intent.setClass(MainActivity.this, VoicePrintActivity.class);
                     intent.putExtra("isreg", isChecked);
-                    intent.putExtra("authid", "abc123");
+                    intent.putExtra("authid", "abc12345678");
+                    intent.putExtra("text", "芝麻开门");
+                    intent.putExtra("type", PWD_TYPE_TEXT);
                     startActivityForResult(intent, REQUEST_FACE);
                 } else {
                     putSetting(VOICE, false);
@@ -172,7 +177,25 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case REQUEST_VOICE:
+                if (resultCode == RESULT_OK) {
+                    //注册
+                    if (data.getBooleanExtra("isreg", true)) {
+                        putSetting(FACE, true);
+                    } else {
+                        new FingerprintAlertDialog(this)
+                                .builder()
+                                .setTitle("刷脸成功")
+                                .setMsg("欢迎主人，宝宝给你请安了^_^")
+                                .setCancelable(false)
+                                .setNegativeButton("我知道了", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
 
+                                    }
+                                })
+                                .show();
+                    }
+                }
                 break;
         }
     }
