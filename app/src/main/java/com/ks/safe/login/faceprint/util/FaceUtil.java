@@ -11,10 +11,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.hardware.Camera;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.Surface;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -145,7 +147,8 @@ public class FaceUtil {
      * @param frontCamera 是否为前置摄像头，如为前置摄像头需左右对称
      * @param DrawOriRect 可绘制原始框，也可以只画四个角
      */
-    static public void drawFaceRect(Canvas canvas, FaceRect face, int width, int height, boolean frontCamera, boolean DrawOriRect) {
+    static public void drawFaceRect(Canvas canvas, FaceRect face, int width, int height,
+                                    boolean frontCamera, boolean DrawOriRect) {
         if (canvas == null) {
             return;
         }

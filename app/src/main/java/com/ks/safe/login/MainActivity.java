@@ -92,13 +92,14 @@ public class MainActivity extends AppCompatActivity {
         vface.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                putSetting(FACE, isChecked);
                 if (isChecked) {
                     Intent intent = new Intent();
                     intent.setClass(MainActivity.this, CameraActivty.class);
                     intent.putExtra("isreg", isChecked);
                     intent.putExtra("authid", "abc123");
                     startActivityForResult(intent, REQUEST_FACE);
+                } else {
+                    putSetting(FACE, false);
                 }
             }
         });
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     //注册
                     if (data.getBooleanExtra("isreg", true)) {
-
+                        putSetting(FACE, true);
                     } else {
                         new FingerprintAlertDialog(this)
                                 .builder()

@@ -78,6 +78,17 @@ public class CameraUtil {
     }
 
     /**
+     * 获取相机传感器的方向
+     * @param cameraId
+     * @return
+     */
+    public int getCameraOrientation(int cameraId) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+        return info.orientation;
+    }
+
+    /**
      * 保证预览方向正确
      *
      * @param activity

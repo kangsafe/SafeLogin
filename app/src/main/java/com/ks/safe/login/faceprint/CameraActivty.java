@@ -44,6 +44,7 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
     private SurfaceView surfaceView;
     private SurfaceHolder mHolder;
     private int mCameraId = 1;
+    int degree = 0;
     //延迟时间
     private ImageView camera_close;
     // authid为6-18个字符长度，用于唯一标识用户
@@ -80,6 +81,9 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
                 startCamera();
             }
         });
+
+
+        degree = CameraUtil.getInstance().getCameraOrientation(mCameraId);
 
         mFaceRequest = new FaceRequest(this);
         service.scheduleWithFixedDelay(new Runnable() {
@@ -292,6 +296,7 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
         return camera;
     }
 
+
     /**
      * 预览相机
      */
@@ -327,22 +332,23 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
                         mImage = BitmapFactory.decodeByteArray(data, 0, data.length, options);
                         // 部分手机会对图片做旋转，这里检测旋转角度
 //                        int degree = FaceUtil.readPictureDegree(fileSrc);
-//                        if (degree != 0) {
-//                            // 把图片旋转为正的方向
-                        mImage = FaceUtil.rotateImage(90, mImage);
-//                        }
+                        Log.i("degree", degree + "");
+                        if (degree != 0) {
+                            // 把图片旋转为正的方向
+                            mImage = FaceUtil.rotateImage(degree, mImage);
+                        }
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         //可根据流量及网络状况对图片进行压缩
                         mImage.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                         byte[] mImageData = baos.toByteArray();
                         startDetect(mImageData);
+//                        ((ImageView) findViewById(R.id.online_img)).setImageBitmap(mImage);
                         if (mImage != null) {
                             mImage.recycle();
                         }
                         if (baos != null) {
                             baos.close();
                         }
-//                        ((ImageView) findViewById(R.id.online_img)).setImageBitmap(mImage);
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
@@ -370,7 +376,11 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
                             (double) options.outHeight / 1024f)));
                     options.inJustDecodeBounds = false;
                     mImage = BitmapFactory.decodeByteArray(data, 0, data.length, options);
-                    mImage = FaceUtil.rotateImage(90, mImage);
+                    if (degree != 0) {
+                        // 把图片旋转为正的方向
+                        mImage = FaceUtil.rotateImage(degree, mImage);
+                    }
+//                    mImage = FaceUtil.rotateImage(90, mImage);
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     //可根据流量及网络状况对图片进行压缩
                     mImage.compress(Bitmap.CompressFormat.JPEG, 70, baos);
