@@ -1,13 +1,11 @@
 package com.ks.safe.login.voiceprint;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.media.MediaRecorder;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,26 +16,25 @@ import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.SpeakerVerifier;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
-import com.iflytek.cloud.SpeechListener;
 import com.iflytek.cloud.VerifierListener;
 import com.iflytek.cloud.VerifierResult;
 import com.ks.safe.login.R;
 import com.ks.safe.login.faceprint.util.PermUtils;
+import com.ks.safe.login.voiceprint.view.CircleProgressView;
+import com.ks.safe.login.voiceprint.view.RippleVoiceView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class VoicePrintActivity extends AppCompatActivity implements View.OnClickListener {
+public class VoicePrintActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener, InitListener {
     TextView vclose;
     TextView vtext;
     ImageView vvoice;
+    CircleProgressView vpbar;
+    RippleVoiceView rippleIntroView;
     private String text;
     private String mauthid;
     private boolean isreg;
     public static final int PWD_TYPE_TEXT = 1;
     // 自由说由于效果问题，暂不开放
-//	private static final int PWD_TYPE_FREE = 2;
+    public static final int PWD_TYPE_FREE = 2;
     public static final int PWD_TYPE_NUM = 3;
     // 当前声纹密码类型，1、2、3分别为文本、自由说和数字密码
     private int mPwdType = PWD_TYPE_TEXT;
@@ -56,30 +53,63 @@ public class VoicePrintActivity extends AppCompatActivity implements View.OnClic
         isreg = getIntent().getBooleanExtra("isreg", true);
         setContentView(R.layout.activity_voice_print);
         initView();
+        initParam();
+    }
+
+    private void initParam() {
+        if (PermUtils.checkWriteStoragePermission(this) && PermUtils.checkRecordPermission(this)) {
+            if (isreg) {
+                // 清空参数
+                mVerifier.setParameter(SpeechConstant.PARAMS, null);
+                mVerifier.setParameter(SpeechConstant.ISV_AUDIO_PATH,
+                        Environment.getExternalStorageDirectory().getAbsolutePath() + "/msc/test.pcm");
+                // 对于某些麦克风非常灵敏的机器，如nexus、samsung i9300等，建议加上以下设置对录音进行消噪处理
+                mVerifier.setParameter(SpeechConstant.AUDIO_SOURCE, "" + MediaRecorder.AudioSource.VOICE_RECOGNITION);
+                mVerifier.setParameter(SpeechConstant.ISV_PWD, text);
+                // 设置auth_id，不能设置为空
+                mVerifier.setParameter(SpeechConstant.AUTH_ID, mauthid);
+                // 设置业务类型为注册
+                mVerifier.setParameter(SpeechConstant.ISV_SST, "train");
+                // 设置声纹密码类型
+                mVerifier.setParameter(SpeechConstant.ISV_PWDT, "" + mPwdType);
+            } else {
+                // 清空参数
+                mVerifier.setParameter(SpeechConstant.PARAMS, null);
+                mVerifier.setParameter(SpeechConstant.ISV_AUDIO_PATH,
+                        Environment.getExternalStorageDirectory().getAbsolutePath() + "/msc/verify.pcm");
+                mVerifier = SpeakerVerifier.getVerifier();
+                // 设置业务类型为验证
+                mVerifier.setParameter(SpeechConstant.ISV_SST, "verify");
+                // 对于某些麦克风非常灵敏的机器，如nexus、samsung i9300等，建议加上以下设置对录音进行消噪处理
+                mVerifier.setParameter(SpeechConstant.AUDIO_SOURCE, "" + MediaRecorder.AudioSource.VOICE_RECOGNITION);
+                mVerifier.setParameter(SpeechConstant.ISV_PWD, text);
+                // 设置auth_id，不能设置为空
+                mVerifier.setParameter(SpeechConstant.AUTH_ID, mauthid);
+                mVerifier.setParameter(SpeechConstant.ISV_PWDT, "" + mPwdType);
+            }
+        }
     }
 
     private void initView() {
+        vpbar = (CircleProgressView) findViewById(R.id.pbar);
         vclose = (TextView) findViewById(R.id.voice_close);
         vclose.setOnClickListener(this);
         vtext = (TextView) findViewById(R.id.voice_txt);
         vvoice = (ImageView) findViewById(R.id.vvoice);
-        vvoice.setOnClickListener(this);
+//        vvoice.setOnTouchListener(this);
         vtext.setText(text);
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-        mToast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        mToast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
 
         // 初始化SpeakerVerifier，InitListener为初始化完成后的回调接口
-        mVerifier = SpeakerVerifier.createVerifier(this, new InitListener() {
-
-            @Override
-            public void onInit(int errorCode) {
-                if (ErrorCode.SUCCESS == errorCode) {
-                    showTip("引擎初始化成功");
-                } else {
-                    showTip("引擎初始化失败，错误码：" + errorCode);
-                }
-            }
-        });
+        mVerifier = SpeakerVerifier.createVerifier(this, this);
+        vpbar.setMaxProgress(5);
+        vpbar.setProgress(0);
+        if (!isreg) {
+            vpbar.setVisibility(View.GONE);
+        }
+        rippleIntroView = (RippleVoiceView) findViewById(R.id.layout_ripple);
+        rippleIntroView.setOnTouchListener(this);
     }
 
     /**
@@ -90,84 +120,17 @@ public class VoicePrintActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.camera_close:
+            case R.id.voice_close:
                 finish();
-                break;
-            case R.id.vvoice:
-                if (PermUtils.checkWriteStoragePermission(this) && PermUtils.checkRecordPermission(this)) {
-                    if (isreg) {
-                        // 清空参数
-                        mVerifier.setParameter(SpeechConstant.PARAMS, null);
-                        mVerifier.setParameter(SpeechConstant.ISV_AUDIO_PATH,
-                                Environment.getExternalStorageDirectory().getAbsolutePath() + "/msc/test.pcm");
-                        // 对于某些麦克风非常灵敏的机器，如nexus、samsung i9300等，建议加上以下设置对录音进行消噪处理
-//			mVerify.setParameter(SpeechConstant.AUDIO_SOURCE, "" + MediaRecorder.AudioSource.VOICE_RECOGNITION);
-                        if (mPwdType == PWD_TYPE_TEXT) {
-                            // 文本密码注册需要传入密码
-                            if (TextUtils.isEmpty(text)) {
-                                showTip("请获取密码后进行操作");
-                                return;
-                            }
-                            mVerifier.setParameter(SpeechConstant.ISV_PWD, text);
-                            showTip("请读出：" + text);
-                            showTip("训练 第" + 1 + "遍，剩余4遍");
-                        } else if (mPwdType == PWD_TYPE_NUM) {
-                            mVerifier.setParameter(SpeechConstant.ISV_PWD, text);
-                            showTip("请读出："
-                                    + text.substring(0, 8));
-                            showTip("训练 第" + 1 + "遍，剩余4遍");
-                        }
-
-                        // 设置auth_id，不能设置为空
-                        mVerifier.setParameter(SpeechConstant.AUTH_ID, mauthid);
-                        // 设置业务类型为注册
-                        mVerifier.setParameter(SpeechConstant.ISV_SST, "train");
-                        // 设置声纹密码类型
-                        mVerifier.setParameter(SpeechConstant.ISV_PWDT, "" + mPwdType);
-                        // 开始注册
-                        mVerifier.startListening(mRegisterListener);
-                    } else {
-                        // 清空参数
-                        mVerifier.setParameter(SpeechConstant.PARAMS, null);
-                        mVerifier.setParameter(SpeechConstant.ISV_AUDIO_PATH,
-                                Environment.getExternalStorageDirectory().getAbsolutePath() + "/msc/verify.pcm");
-                        mVerifier = SpeakerVerifier.getVerifier();
-                        // 设置业务类型为验证
-                        mVerifier.setParameter(SpeechConstant.ISV_SST, "verify");
-                        // 对于某些麦克风非常灵敏的机器，如nexus、samsung i9300等，建议加上以下设置对录音进行消噪处理
-//			mVerify.setParameter(SpeechConstant.AUDIO_SOURCE, "" + MediaRecorder.AudioSource.VOICE_RECOGNITION);
-
-                        if (mPwdType == PWD_TYPE_TEXT) {
-                            // 文本密码注册需要传入密码
-                            if (TextUtils.isEmpty(text)) {
-                                showTip("请获取密码后进行操作");
-                                return;
-                            }
-                            mVerifier.setParameter(SpeechConstant.ISV_PWD, text);
-                            showTip("请读出：" + text);
-                        } else if (mPwdType == PWD_TYPE_NUM) {
-                            // 数字密码注册需要传入密码
-                            String verifyPwd = mVerifier.generatePassword(8);
-                            mVerifier.setParameter(SpeechConstant.ISV_PWD, verifyPwd);
-                            showTip("请读出：" + verifyPwd);
-                        }
-                        // 设置auth_id，不能设置为空
-                        mVerifier.setParameter(SpeechConstant.AUTH_ID, mauthid);
-                        mVerifier.setParameter(SpeechConstant.ISV_PWDT, "" + mPwdType);
-                        // 开始验证
-                        mVerifier.startListening(mVerifyListener);
-                    }
-                }
                 break;
         }
     }
 
-    private String[] items;
     private VerifierListener mVerifyListener = new VerifierListener() {
         @Override
         public void onVolumeChanged(int volume, byte[] data) {
-            showTip("当前正在说话，音量大小：" + volume);
-            Log.d("TAG", "返回音频数据：" + data.length);
+//            showTip("当前正在说话，音量大小：" + volume);
+//            Log.d("TAG", "返回音频数据：" + data.length);
         }
 
         @Override
@@ -247,8 +210,9 @@ public class VoicePrintActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         public void onVolumeChanged(int volume, byte[] data) {
-            showTip("当前正在说话，音量大小：" + volume);
-            Log.d("TAG", "返回音频数据：" + data.length);
+            rippleIntroView.setProgress(volume);
+//            showTip("当前正在说话，音量大小：" + volume);
+//            Log.d("TAG", "返回音频数据：" + data.length);
         }
 
         @Override
@@ -294,12 +258,9 @@ public class VoicePrintActivity extends AppCompatActivity implements View.OnClic
                     int nowTimes = result.suc + 1;
                     int leftTimes = result.rgn - nowTimes;
 
-                    if (PWD_TYPE_TEXT == mPwdType) {
-                        showTip("请读出：" + text);
-                    } else if (PWD_TYPE_NUM == mPwdType) {
-                        showTip("请读出：" + mNumPwdSegs[nowTimes - 1]);
-                    }
-                    showTip("训练 第" + nowTimes + "遍，剩余" + leftTimes + "遍");
+                    vpbar.setProgress(nowTimes);
+                    vpbar.setmTxtHint1("训练 第" + nowTimes + "遍");
+                    vpbar.setmTxtHint2("剩余" + leftTimes + "遍");
                 }
             } else {
                 showTip("注册失败，请重新开始。");
@@ -310,10 +271,10 @@ public class VoicePrintActivity extends AppCompatActivity implements View.OnClic
         @Override
         public void onEvent(int eventType, int arg1, int arg2, Bundle arg3) {
             // 以下代码用于获取与云端的会话id，当业务出错时将会话id提供给技术支持人员，可用于查询会话日志，定位出错原因
-            //	if (SpeechEvent.EVENT_SESSION_ID == eventType) {
-            //		String sid = obj.getString(SpeechEvent.KEY_EVENT_SESSION_ID);
-            //		Log.d(TAG, "session id =" + sid);
-            //	}
+//            	if (SpeechEvent.EVENT_SESSION_ID == eventType) {
+//            		String sid = obj.getString(SpeechEvent.KEY_EVENT_SESSION_ID);
+//            		Log.d(TAG, "session id =" + sid);
+//            	}
         }
 
         @Override
@@ -327,12 +288,12 @@ public class VoicePrintActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         public void onEndOfSpeech() {
-            showTip("结束说话");
+//            showTip("结束说话");
         }
 
         @Override
         public void onBeginOfSpeech() {
-            showTip("开始说话");
+//            showTip("开始说话");
         }
     };
 
@@ -362,6 +323,38 @@ public class VoicePrintActivity extends AppCompatActivity implements View.OnClic
             return false;
         } else {
             return true;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (isreg) {
+                    // 开始注册
+                    mVerifier.startListening(mRegisterListener);
+
+                } else {
+                    // 开始验证
+                    mVerifier.startListening(mVerifyListener);
+                }
+                rippleIntroView.start();
+                break;
+            case MotionEvent.ACTION_UP:
+                mVerifier.stopListening();
+                rippleIntroView.stop();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onInit(int errorCode) {
+        if (ErrorCode.SUCCESS == errorCode) {
+//            showTip("引擎初始化成功");
+            vvoice.setClickable(true);
+        } else {
+            showTip("引擎初始化失败，错误码：" + errorCode);
         }
     }
 }

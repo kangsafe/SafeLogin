@@ -36,12 +36,27 @@
         android:text="芝麻开门"
         android:textSize="30sp" />
 
-    <ImageView
-        android:id="@+id/vvoice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.ks.safe.login.voiceprint.view.CircleProgressView
+        android:id="@+id/pbar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true" />
+
+    <com.ks.safe.login.voiceprint.view.RippleVoiceView
+        android:id="@+id/layout_ripple"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:src="@mipmap/icon_voice" />
+        android:background="@drawable/bg"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/vvoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/icon_voice" />
+    </com.ks.safe.login.voiceprint.view.RippleVoiceView>
+
 </RelativeLayout>

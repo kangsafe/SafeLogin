@@ -58,8 +58,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -68,8 +69,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".faceprint.OnlineFacePrintActivity" />
-        <activity android:name=".faceprint.CameraActivty"></activity>
-        <activity android:name=".voiceprint.VoicePrintActivity"></activity>
+        <activity android:name=".faceprint.CameraActivty">
+
+        </activity>
+        <activity
+            android:name=".voiceprint.VoicePrintActivity"
+            android:theme="@style/AppTheme.NoTitle">
+
+        </activity>
+        <activity android:name=".faceprint.FaceCameraActivity">
+
+        </activity>
     </application>
 
 </manifest>

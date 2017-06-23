@@ -6,6 +6,7 @@ import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -41,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
         vface = (Switch) findViewById(R.id.vface);
         vvoice = (Switch) findViewById(R.id.vvoice);
         vgen = (Switch) findViewById(R.id.vgensture);
+        findViewById(R.id.layout_ripple).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ViewGroup) v.getParent()).removeView(v);
+            }
+        });
         vfinger.setChecked(sp.getBoolean(FINGER, false));
         vface.setChecked(sp.getBoolean(FACE, false));
         vvoice.setChecked(sp.getBoolean(VOICE, false));

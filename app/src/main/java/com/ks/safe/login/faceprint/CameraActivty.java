@@ -361,6 +361,7 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
     }
 
     private void captrue() {
+        mCamera.startFaceDetection();
         mCamera.takePicture(null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
