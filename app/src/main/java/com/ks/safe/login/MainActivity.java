@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -15,6 +16,7 @@ import com.ks.safe.login.faceprint.CameraActivty;
 import com.ks.safe.login.fingerprint.FingerPrintDialog;
 import com.ks.safe.login.fingerprint.FingerPrintUtil;
 import com.ks.safe.login.fingerprint.FingerprintAlertDialog;
+import com.ks.safe.login.view.AppBarLayoutView;
 import com.ks.safe.login.voiceprint.VoicePrintActivity;
 
 import static com.ks.safe.login.voiceprint.VoicePrintActivity.PWD_TYPE_TEXT;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public static String SAFE_LOGIN_TYPE = "safe_login_type";
     public static final int REQUEST_FACE = 0;
     public static final int REQUEST_VOICE = 1;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
         vface = (Switch) findViewById(R.id.vface);
         vvoice = (Switch) findViewById(R.id.vvoice);
         vgen = (Switch) findViewById(R.id.vgensture);
+        toolbar = (Toolbar) findViewById(R.id.third_activity_toolbar);
+        setSupportActionBar(toolbar);
+        AppBarLayoutView bar = (AppBarLayoutView) findViewById(R.id.vappbar);
+        bar.setMax(500);
+        bar.setProgressSync(361.8f);
         findViewById(R.id.layout_ripple).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
