@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--动态设置wavedynamicappbar属性-->
+    <declare-styleable name="WaveDynamicAppBarAttr">
+        <!--水波颜色-->
+        <attr name="waveColor" format="color" />
+        <!--水波振幅-->
+        <attr name="waveHeight" format="dimension" />
+        <!--第一条水波移动速度-->
+        <attr name="waveSpeed1" format="dimension" />
+        <!--第二条水波移动速度-->
+        <attr name="waveSpeed2" format="dimension" />
+    </declare-styleable>
+</resources>

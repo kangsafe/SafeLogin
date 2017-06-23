@@ -7,11 +7,15 @@
     android:background="@drawable/bg"
     android:orientation="vertical">
 
-    <com.ks.safe.login.view.AppBarLayoutView
+    <com.ks.safe.login.view.WaveDynamicAppBar
         android:id="@+id/vappbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:waveColor="@color/light_blue"
+        app:waveHeight="10dp"
+        app:waveSpeed1="7dp"
+        app:waveSpeed2="5dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/third_activity_toolbar"
@@ -27,7 +31,7 @@
             app:tabSelectedTextColor="#000"
             app:tabTextColor="#f00" />
 
-    </com.ks.safe.login.view.AppBarLayoutView>
+    </com.ks.safe.login.view.WaveDynamicAppBar>
 
     <FrameLayout
         android:layout_width="match_parent"

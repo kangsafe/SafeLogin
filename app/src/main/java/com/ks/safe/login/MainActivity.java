@@ -2,9 +2,9 @@ package com.ks.safe.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,7 @@ import com.ks.safe.login.faceprint.CameraActivty;
 import com.ks.safe.login.fingerprint.FingerPrintDialog;
 import com.ks.safe.login.fingerprint.FingerPrintUtil;
 import com.ks.safe.login.fingerprint.FingerprintAlertDialog;
-import com.ks.safe.login.view.AppBarLayoutView;
+import com.ks.safe.login.view.WaveDynamicAppBar;
 import com.ks.safe.login.voiceprint.VoicePrintActivity;
 
 import static com.ks.safe.login.voiceprint.VoicePrintActivity.PWD_TYPE_TEXT;
@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
         vgen = (Switch) findViewById(R.id.vgensture);
         toolbar = (Toolbar) findViewById(R.id.third_activity_toolbar);
         setSupportActionBar(toolbar);
-        AppBarLayoutView bar = (AppBarLayoutView) findViewById(R.id.vappbar);
+        WaveDynamicAppBar bar = (WaveDynamicAppBar) findViewById(R.id.vappbar);
         bar.setMax(500);
-        bar.setProgressSync(361.8f);
+        bar.setProgressSync(100);
         findViewById(R.id.layout_ripple).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
