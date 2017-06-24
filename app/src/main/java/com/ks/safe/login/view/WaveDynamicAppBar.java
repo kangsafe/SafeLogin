@@ -48,6 +48,8 @@ public class WaveDynamicAppBar extends AppBarLayout {
     private Paint mWavePaint;
     private DrawFilter mDrawFilter;
 
+    private boolean isRunnning = false;
+
     public WaveDynamicAppBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.WaveDynamicAppBarAttr);
@@ -83,32 +85,34 @@ public class WaveDynamicAppBar extends AppBarLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        // 从canvas层面去除绘制时锯齿
-        canvas.setDrawFilter(mDrawFilter);
-        resetPositonY();
-        for (int i = 0; i < mTotalWidth; i++) {
-            // 减400只是为了控制波纹绘制的y在屏幕的位置，大家可以改成一个变量，然后动态改变这个变量，从而形成波纹上升下降效果
-            // 绘制第一条水波纹
-            canvas.drawLine(i, mTotalHeight - mResetOneYPositions[i] - height * progress / max, i, mTotalHeight, mWavePaint);
+        if (isRunnning) {
+            // 从canvas层面去除绘制时锯齿
+            canvas.setDrawFilter(mDrawFilter);
+            resetPositonY();
+            for (int i = 0; i < mTotalWidth; i++) {
+                // 减400只是为了控制波纹绘制的y在屏幕的位置，大家可以改成一个变量，然后动态改变这个变量，从而形成波纹上升下降效果
+                // 绘制第一条水波纹
+                canvas.drawLine(i, mTotalHeight - mResetOneYPositions[i] - height * progress / max, i, mTotalHeight, mWavePaint);
 
-            // 绘制第二条水波纹
-            canvas.drawLine(i, mTotalHeight - mResetTwoYPositions[i] - height * progress / max, i, mTotalHeight, mWavePaint);
+                // 绘制第二条水波纹
+                canvas.drawLine(i, mTotalHeight - mResetTwoYPositions[i] - height * progress / max, i, mTotalHeight, mWavePaint);
+            }
+
+            // 改变两条波纹的移动点
+            mXOneOffset += mXOffsetSpeedOne;
+            mXTwoOffset += mXOffsetSpeedTwo;
+
+            // 如果已经移动到结尾处，则重头记录
+            if (mXOneOffset >= mTotalWidth) {
+                mXOneOffset = 0;
+            }
+            if (mXTwoOffset > mTotalWidth) {
+                mXTwoOffset = 0;
+            }
+
+            // 引发view重绘，一般可以考虑延迟20-30ms重绘，空出时间片
+            postInvalidate();
         }
-
-        // 改变两条波纹的移动点
-        mXOneOffset += mXOffsetSpeedOne;
-        mXTwoOffset += mXOffsetSpeedTwo;
-
-        // 如果已经移动到结尾处，则重头记录
-        if (mXOneOffset >= mTotalWidth) {
-            mXOneOffset = 0;
-        }
-        if (mXTwoOffset > mTotalWidth) {
-            mXTwoOffset = 0;
-        }
-
-        // 引发view重绘，一般可以考虑延迟20-30ms重绘，空出时间片
-        postInvalidate();
     }
 
     private void resetPositonY() {
@@ -126,22 +130,24 @@ public class WaveDynamicAppBar extends AppBarLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        // 记录下view的宽高
-        mTotalWidth = w;
-        mTotalHeight = h;
-        // 用于保存原始波纹的y值
-        mYPositions = new float[mTotalWidth];
-        // 用于保存波纹一的y值
-        mResetOneYPositions = new float[mTotalWidth];
-        // 用于保存波纹二的y值
-        mResetTwoYPositions = new float[mTotalWidth];
+        if (isRunnning) {
+            // 记录下view的宽高
+            mTotalWidth = w;
+            mTotalHeight = h;
+            // 用于保存原始波纹的y值
+            mYPositions = new float[mTotalWidth];
+            // 用于保存波纹一的y值
+            mResetOneYPositions = new float[mTotalWidth];
+            // 用于保存波纹二的y值
+            mResetTwoYPositions = new float[mTotalWidth];
 
-        // 将周期定为view总宽度
-        mCycleFactorW = (float) (2 * Math.PI / mTotalWidth);
+            // 将周期定为view总宽度
+            mCycleFactorW = (float) (2 * Math.PI / mTotalWidth);
 
-        // 根据view总宽度得出所有对应的y值
-        for (int i = 0; i < mTotalWidth; i++) {
-            mYPositions[i] = (float) (STRETCH_FACTOR_A * Math.sin(mCycleFactorW * i) + OFFSET_Y);
+            // 根据view总宽度得出所有对应的y值
+            for (int i = 0; i < mTotalWidth; i++) {
+                mYPositions[i] = (float) (STRETCH_FACTOR_A * Math.sin(mCycleFactorW * i) + OFFSET_Y);
+            }
         }
     }
 
@@ -156,4 +162,11 @@ public class WaveDynamicAppBar extends AppBarLayout {
 //        invalidate();
     }
 
+    public void start() {
+        this.isRunnning = true;
+    }
+
+    public void stop() {
+        this.isRunnning = false;
+    }
 }

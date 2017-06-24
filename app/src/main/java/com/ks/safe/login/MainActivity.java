@@ -3,6 +3,7 @@ package com.ks.safe.login;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -47,9 +48,16 @@ public class MainActivity extends AppCompatActivity {
         vgen = (Switch) findViewById(R.id.vgensture);
         toolbar = (Toolbar) findViewById(R.id.third_activity_toolbar);
         setSupportActionBar(toolbar);
-        WaveDynamicAppBar bar = (WaveDynamicAppBar) findViewById(R.id.vappbar);
+        final WaveDynamicAppBar bar = (WaveDynamicAppBar) findViewById(R.id.vappbar);
         bar.setMax(500);
         bar.setProgressSync(100);
+        bar.start();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bar.stop();
+            }
+        }, 5000);
         findViewById(R.id.layout_ripple).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
