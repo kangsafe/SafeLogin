@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LockPattern</string>
+    <string name="setting">设置</string>
+    <string name="open">解锁</string>
+</resources>

@@ -80,6 +80,9 @@
         <activity android:name=".faceprint.FaceCameraActivity">
 
         </activity>
+        <activity android:name=".lockpattern.PatternLockActivity">
+
+        </activity>
     </application>
 
 </manifest>

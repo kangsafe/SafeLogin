@@ -17,6 +17,7 @@ import com.ks.safe.login.faceprint.CameraActivty;
 import com.ks.safe.login.fingerprint.FingerPrintDialog;
 import com.ks.safe.login.fingerprint.FingerPrintUtil;
 import com.ks.safe.login.fingerprint.FingerprintAlertDialog;
+import com.ks.safe.login.lockpattern.PatternLockActivity;
 import com.ks.safe.login.view.WaveDynamicAppBar;
 import com.ks.safe.login.voiceprint.VoicePrintActivity;
 
@@ -31,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
     public static String FINGER = "finger";
     public static String FACE = "face";
     public static String VOICE = "voice";
-    public static String GENITUE = "genisture";
+    public static String GESTURE = "gesture";
     public static String SAFE_LOGIN_TYPE = "safe_login_type";
     public static final int REQUEST_FACE = 0;
     public static final int REQUEST_VOICE = 1;
+    public static final int REQUEST_GESTURE = 3;
     private Toolbar toolbar;
 
     @Override
@@ -67,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
         vfinger.setChecked(sp.getBoolean(FINGER, false));
         vface.setChecked(sp.getBoolean(FACE, false));
         vvoice.setChecked(sp.getBoolean(VOICE, false));
-        vgen.setChecked(sp.getBoolean(GENITUE, false));
+        vgen.setChecked(sp.getBoolean(GESTURE, false));
+
         vfinger.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -147,6 +150,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        vgen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, PatternLockActivity.class);
+                    intent.putExtra("type", "setting");
+                    startActivityForResult(intent, REQUEST_GESTURE);
+                } else {
+                    putSetting(VOICE, false);
+                }
+            }
+        });
+
         //指纹识别
         if (sp.getString(SAFE_LOGIN_TYPE, FINGER).equals(FINGER) && sp.getBoolean(FINGER, false)) {
             new FingerPrintDialog().build(this).setListener(new View.OnClickListener() {
@@ -160,6 +178,11 @@ public class MainActivity extends AppCompatActivity {
             intent.setClass(this, CameraActivty.class);
             intent.putExtra("isreg", false);
             intent.putExtra("authid", "abc123");
+            startActivityForResult(intent, REQUEST_FACE);
+        } else if (sp.getString(SAFE_LOGIN_TYPE, GESTURE).equals(GESTURE) && sp.getBoolean(GESTURE, false)) {
+            Intent intent = new Intent();
+            intent.setClass(this, CameraActivty.class);
+            intent.putExtra("type", "open");
             startActivityForResult(intent, REQUEST_FACE);
         }
     }
@@ -217,6 +240,16 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 })
                                 .show();
+                    }
+                }
+                break;
+            case REQUEST_GESTURE:
+                if (resultCode == RESULT_OK) {
+                    //注册
+                    if (data.getStringExtra("type").equals("setting")) {
+                        putSetting(GESTURE, true);
+                    } else {
+
                     }
                 }
                 break;
