@@ -2,6 +2,7 @@ package com.ks.safe.login.lockpattern;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.TextView;
@@ -17,13 +18,15 @@ import com.ks.safe.login.lockpattern.view.PatternViewLintener;
  * Created by sgffsg on 17/4/24.
  */
 
-public class PatternLockActivity extends AppCompatActivity {
+public class PatternLockActivity extends AppCompatActivity implements Runnable {
 
     private PatternLockView patternLockView;
     private TextView tvTip;
     private String password;
     private String type;
     private SPUtils spUtils;
+    private int num = 1;
+    private int maxNum = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +51,9 @@ public class PatternLockActivity extends AppCompatActivity {
         patternLockView.setPatternViewListener(new PatternViewLintener() {
             @Override
             public void onSuccess() {
-                Toast.makeText(PatternLockActivity.this, "成功", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.putExtra("type", type);
-                setResult(RESULT_OK, intent);
-                finish();
+                if (num <= maxNum) {
+                    onBackPressed();
+                }
             }
 
             @Override
@@ -76,8 +77,45 @@ public class PatternLockActivity extends AppCompatActivity {
 
             @Override
             public void onError() {
-                Toast.makeText(PatternLockActivity.this, "手势密码错误，还可以输入四次", Toast.LENGTH_SHORT).show();
+                if (num < maxNum) {
+                    tvTip.setText("手势密码错误，还可以输入" + (maxNum - num) + "次");
+                    num++;
+                } else {
+                    tvTip.setText("锁定30秒");
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            tvTip.setText("请输入手势");
+//                            num = 1;
+//                        }
+//                    }, 30000);
+//
+                }
             }
         });
+    }
+
+    /**
+     * Take care of popping the fragment back stack or finishing the activity
+     * as appropriate.
+     */
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("type", type);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    int timer = 30;
+
+    @Override
+    public void run() {
+        if (num >= maxNum) {
+            tvTip.setText("锁定" + timer + "秒");
+            timer--;
+        } else {
+            timer = 30;
+        }
     }
 }

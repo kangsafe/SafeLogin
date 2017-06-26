@@ -181,15 +181,21 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_FACE);
         } else if (sp.getString(SAFE_LOGIN_TYPE, GESTURE).equals(GESTURE) && sp.getBoolean(GESTURE, false)) {
             Intent intent = new Intent();
-            intent.setClass(this, CameraActivty.class);
+            intent.setClass(this, PatternLockActivity.class);
             intent.putExtra("type", "open");
-            startActivityForResult(intent, REQUEST_FACE);
+            startActivityForResult(intent, REQUEST_GESTURE);
         }
     }
 
     private void putSetting(String name, boolean val) {
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(name, val);
+        editor.commit();
+    }
+
+    private void putSettingString(String name, String val) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(name, val);
         editor.commit();
     }
 
@@ -206,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
                     //注册
                     if (data.getBooleanExtra("isreg", true)) {
                         putSetting(FACE, true);
+                        putSettingString(SAFE_LOGIN_TYPE, FACE);
                     } else {
                         new FingerprintAlertDialog(this)
                                 .builder()
@@ -226,7 +233,8 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     //注册
                     if (data.getBooleanExtra("isreg", true)) {
-                        putSetting(FACE, true);
+                        putSetting(VOICE, true);
+                        putSettingString(SAFE_LOGIN_TYPE, VOICE);
                     } else {
                         new FingerprintAlertDialog(this)
                                 .builder()
@@ -246,10 +254,11 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_GESTURE:
                 if (resultCode == RESULT_OK) {
                     //注册
-                    if (data.getStringExtra("type").equals("setting")) {
+                    if (data != null && data.getStringExtra("type").equals("setting")) {
                         putSetting(GESTURE, true);
+                        putSettingString(SAFE_LOGIN_TYPE, GESTURE);
                     } else {
-
+                        Toast.makeText(MainActivity.this, "欢迎回来", Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
