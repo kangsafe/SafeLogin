@@ -85,7 +85,11 @@
                     <Switch
                         android:id="@+id/vface"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textOff=""
+                        android:textOn=""
+                        android:thumb="@drawable/thumb"
+                        android:track="@drawable/track" />
                 </LinearLayout>
 
                 <LinearLayout
