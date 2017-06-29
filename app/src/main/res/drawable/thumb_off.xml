@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="ring"
-    android:innerRadius="0dp"
-    android:innerRadiusRatio="1"
-    android:thickness="16dp"
-    android:thicknessRatio="2"
-    android:useLevel="false">
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
 
-    <stroke android:width="1px"
-        android:color="#bdbdbd"/>
-
-    <solid android:color="#ffffffff" />
-
+    <stroke
+        android:width="2dp"
+        android:color="@color/lighter_gray" />
+    <solid android:color="@android:color/white" />
+    <size
+        android:width="30dp"
+        android:height="30dp" />
 </shape>
