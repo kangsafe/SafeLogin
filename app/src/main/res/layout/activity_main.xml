@@ -66,7 +66,9 @@
                     <Switch
                         android:id="@+id/vfinger"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -79,11 +81,19 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="刷脸" />
-
+                    <!--android:switchMinWidth="44dp"：track使用的是宽度为48dp的圆角方形，此处值不大于48dp都可以-->
+                    <!--android:thumbTextPadding="16dp":thumb使用的的半径为16dp的圆-->
+                    <!--这里我们不需要thumb显示文字-->
                     <Switch
                         android:id="@+id/vface"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:switchMinWidth="48dp"
+                        android:textOff=""
+                        android:textOn=""
+                        android:thumb="@drawable/thumb"
+                        android:thumbTextPadding="16dp"
+                        android:track="@drawable/track" />
                 </LinearLayout>
 
                 <LinearLayout
