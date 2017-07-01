@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.ks.safe.login.faceprint.CameraActivty;
 import com.ks.safe.login.fingerprint.FingerPrintDialog;
 import com.ks.safe.login.fingerprint.FingerPrintUtil;
 import com.ks.safe.login.fingerprint.FingerprintAlertDialog;
+import com.ks.safe.login.hepai.HePaiLvActivity;
 import com.ks.safe.login.lockpattern.PatternLockActivity;
 import com.ks.safe.login.view.WaveDynamicAppBar;
 import com.ks.safe.login.voiceprint.VoicePrintActivity;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Switch vface;
     Switch vvoice;
     Switch vgen;
+    ImageView hepai;
     SharedPreferences sp;
     public static String FINGER = "finger";
     public static String FACE = "face";
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         vface = (Switch) findViewById(R.id.vface);
         vvoice = (Switch) findViewById(R.id.vvoice);
         vgen = (Switch) findViewById(R.id.vgensture);
+        hepai = (ImageView) findViewById(R.id.hepai);
         toolbar = (Toolbar) findViewById(R.id.third_activity_toolbar);
         setSupportActionBar(toolbar);
         final WaveDynamicAppBar bar = (WaveDynamicAppBar) findViewById(R.id.vappbar);
@@ -164,7 +168,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        hepai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, HePaiLvActivity.class));
+            }
+        });
         //指纹识别
         if (sp.getString(SAFE_LOGIN_TYPE, FINGER).equals(FINGER) && sp.getBoolean(FINGER, false)) {
             new FingerPrintDialog().build(this).setListener(new View.OnClickListener() {

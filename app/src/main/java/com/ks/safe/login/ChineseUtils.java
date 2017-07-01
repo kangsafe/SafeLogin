@@ -12,22 +12,27 @@ public class ChineseUtils {
      * @return int
      */
     public static int getStrokeCount(char charcator) {
-        byte[] bytes = (String.valueOf(charcator)).getBytes();
-        if (bytes == null || bytes.length > 2 || bytes.length <= 0) {
-            // 错误引用,非合法字符
+        try {
+            byte[] bytes = (String.valueOf(charcator)).getBytes("gb2312");
+            if (bytes == null || bytes.length > 2 || bytes.length <= 0) {
+                // 错误引用,非合法字符
+                return 0;
+            }
+            if (bytes.length == 1) {
+                // 英文字符
+                return 0;
+            }
+            if (bytes.length == 2) {
+                // 中文字符
+                int highByte = 256 + bytes[0];
+                int lowByte = 256 + bytes[1];
+                return getStrokeCount(highByte, lowByte);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 未知错误
             return 0;
         }
-        if (bytes.length == 1) {
-            // 英文字符
-            return 0;
-        }
-        if (bytes.length == 2) {
-            // 中文字符
-            int highByte = 256 + bytes[0];
-            int lowByte = 256 + bytes[1];
-            return getStrokeCount(highByte, lowByte);
-        }
-        // 未知错误
         return 0;
     }
 
