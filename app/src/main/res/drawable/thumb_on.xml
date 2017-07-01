@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="ring"
-    android:innerRadius="0dp"
-    android:innerRadiusRatio="1"
-    android:thickness="15dp"
-    android:thicknessRatio="2"
-    android:useLevel="false">
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
 
-    <!--半径设置为15dp是为了让边界能够显示出一丝track-->
-
-    <solid android:color="#ffffffff" />
-
+    <stroke
+        android:width="2dp"
+        android:color="@color/colorPrimary" />
+    <solid android:color="@android:color/white" />
+    <size
+        android:width="30dp"
+        android:height="30dp" />
 </shape>
