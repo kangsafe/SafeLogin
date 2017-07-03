@@ -1,5 +1,13 @@
 package com.ks.safe.login;
 
+import android.media.session.MediaSession;
+import android.support.v4.media.session.MediaSessionCompat;
+
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
+
 /**
  * Created by Administrator on 2017/7/1.
  */
@@ -514,4 +522,26 @@ public class ChineseUtils {
             21, 17, 18, 20, 23, 23, 16, 17, 23
  /* F8 */
     };
+
+    /**
+     * 获取全拼
+     * @param source
+     * @return
+     */
+    public static String getFullPinYin(String source) {
+        return Trans2PinYin.getInstance().convertAll(source);
+    }
+
+    public static String getSinglePinYin(String source){
+        return Trans2PinYin.getInstance().convert(source);
+    }
+
+    /**
+     * 获取简拼
+     * @param source
+     * @return
+     */
+    public static String getFirstPinYin(String source) {
+        return Trans2PinYin.getInstance().getFullSpelling(source);
+    }
 }

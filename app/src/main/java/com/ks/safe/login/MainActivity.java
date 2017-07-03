@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ks.safe.login.faceprint.CameraActivty;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     Switch vgen;
     ImageView hepai;
     SharedPreferences sp;
+    TextView fullTv;
+    TextView singleTv;
     public static String FINGER = "finger";
     public static String FACE = "face";
     public static String VOICE = "voice";
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         vvoice = (Switch) findViewById(R.id.vvoice);
         vgen = (Switch) findViewById(R.id.vgensture);
         hepai = (ImageView) findViewById(R.id.hepai);
+        fullTv = (TextView) findViewById(R.id.full);
+        singleTv = (TextView) findViewById(R.id.letter);
         toolbar = (Toolbar) findViewById(R.id.third_activity_toolbar);
         setSupportActionBar(toolbar);
         final WaveDynamicAppBar bar = (WaveDynamicAppBar) findViewById(R.id.vappbar);
@@ -74,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
         vface.setChecked(sp.getBoolean(FACE, false));
         vvoice.setChecked(sp.getBoolean(VOICE, false));
         vgen.setChecked(sp.getBoolean(GESTURE, false));
-
+        fullTv.setText("全拼：" + ChineseUtils.getFullPinYin("中华人民共和国"));
+        singleTv.setText("简拼：" + ChineseUtils.getFirstPinYin("中华人民共和国"));
         vfinger.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -168,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        //合拍率
         hepai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
