@@ -70,16 +70,16 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
         degree = CameraUtil.getInstance().getCameraOrientation(mCameraId);
 
         mFaceRequest = new FaceRequest(this);
-        service.scheduleWithFixedDelay(new Runnable() {
+        service.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 Log.i("定时任务", "执行任务");
-                if (isreg) {
+                if (isreg && !isChecked) {
                     detectCaptrue();
 //                    captrue();
                 }
             }
-        }, 1, 2, TimeUnit.SECONDS);
+        }, 1, 1, TimeUnit.SECONDS);
         initReg();
     }
 
@@ -358,7 +358,6 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
                 @Override
                 public void onPictureTaken(byte[] data, Camera camera) {
                     isChecked = true;
-                    startCamera();
                     Log.i("检测", "Size" + data.length / 1024 + "KB");
                     try {
                         Bitmap mImage;
@@ -395,7 +394,7 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
                         e.printStackTrace();
                     } finally {
                         isChecked = false;
-                        //startCamera();
+                        startCamera();
                     }
                 }
             });
@@ -410,7 +409,6 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
             public void onPictureTaken(byte[] data, Camera camera) {
                 isChecked = true;
                 Log.i("验证", "Size" + data.length / 1024 + "KB");
-                startCamera();
                 try {
                     Bitmap mImage;
                     // 获取图片的宽和高
@@ -442,7 +440,7 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
                 } catch (Exception e) {
                     e.printStackTrace();
                     isChecked = false;
-                    //startCamera();
+                    startCamera();
                 }
             }
         });
