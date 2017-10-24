@@ -21,6 +21,7 @@ import com.iflytek.cloud.RequestListener;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.ks.safe.login.R;
+import com.ks.safe.login.faceprint.util.BitmapUtils;
 import com.ks.safe.login.faceprint.util.CameraUtil;
 import com.ks.safe.login.faceprint.util.FaceUtil;
 
@@ -39,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * Author: kang
  * Email: kangsafe@163.com
  */
-public class CameraActivty extends Activity implements SurfaceHolder.Callback, View.OnClickListener {
+public class CameraBDActivty extends Activity implements SurfaceHolder.Callback, View.OnClickListener {
     private Camera mCamera;
     private SurfaceView surfaceView;
     private SurfaceHolder mHolder;
@@ -54,8 +55,8 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
     private ProgressDialog mProDialog;
     // FaceRequest对象，集成了人脸识别的各种功能
     private FaceRequest mFaceRequest;
-    private boolean isreg = true;
     ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+    private boolean isreg = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,26 +64,9 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
         setContentView(R.layout.activity_camera);
         initView();
         mAuthid = getIntent().getStringExtra("authid");
-        isreg = getIntent().getBooleanExtra("isreg", true);
         // 在程序入口处传入appid，初始化SDK
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-        mProDialog = new ProgressDialog(this);
-        mProDialog.setCancelable(true);
-        mProDialog.setTitle("请稍后");
-
-        mProDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                // cancel进度框时,取消正在进行的操作
-                if (null != mFaceRequest) {
-                    mFaceRequest.cancel();
-                }
-                startCamera();
-            }
-        });
-
-
+        initProgress();
         degree = CameraUtil.getInstance().getCameraOrientation(mCameraId);
 
         mFaceRequest = new FaceRequest(this);
@@ -90,7 +74,11 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
             @Override
             public void run() {
                 Log.i("ch", "sss");
-                detectCaptrue();
+                if (isreg) {
+                    detectCaptrue();
+                } else {
+                    initReg();
+                }
             }
         }, 0, 2, TimeUnit.SECONDS);
     }
@@ -100,19 +88,50 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
         mToast.show();
     }
 
-    public void startRegOrVerify(byte[] mImageData) {
+    private void initProgress() {
+        if (mProDialog == null || !mProDialog.isShowing()) {
+            mProDialog = new ProgressDialog(this);
+            mProDialog.setCancelable(true);
+            mProDialog.setTitle("请稍后");
+            mProDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    // cancel进度框时,取消正在进行的操作
+                    if (null != mFaceRequest) {
+                        mFaceRequest.cancel();
+                    }
+                    startCamera();
+                }
+            });
+        }
+    }
+
+    public void startRegFace(byte[] mImageData) {
         Log.i("Size", mImageData.length / 1024 + "KB");
-        mProDialog.setMessage(isreg ? "注册中..." : "验证中");
+//        initProgress();
+//        mProDialog.setMessage("注册中...");
+//        mProDialog.show();
+        // 设置用户标识，格式为6-18个字符（由字母、数字、下划线组成，不得以数字开头，不能包含空格）。
+        // 当不设置时，云端将使用用户设备的设备ID来标识终端用户。
+        mFaceRequest.setParameter(SpeechConstant.AUTH_ID, mAuthid);
+        mFaceRequest.setParameter(SpeechConstant.WFR_SST, "reg");
+        mFaceRequest.setParameter("property", "del");
+        int ret = mFaceRequest.sendRequest(mImageData, mRequestListener);
+        if (ErrorCode.SUCCESS != ret) {
+            mProDialog.dismiss();
+            showTip("出现错误：" + ret);
+        }
+    }
+
+    public void startVerify(byte[] mImageData) {
+        Log.i("Size", mImageData.length / 1024 + "KB");
+        mProDialog.setMessage("验证中");
         mProDialog.show();
         // 设置用户标识，格式为6-18个字符（由字母、数字、下划线组成，不得以数字开头，不能包含空格）。
         // 当不设置时，云端将使用用户设备的设备ID来标识终端用户。
         mFaceRequest.setParameter(SpeechConstant.AUTH_ID, mAuthid);
-        if (isreg) {
-            mFaceRequest.setParameter(SpeechConstant.WFR_SST, "reg");
-            mFaceRequest.setParameter("property", "del");
-        } else {
-            mFaceRequest.setParameter(SpeechConstant.WFR_SST, "verify");
-        }
+        mFaceRequest.setParameter(SpeechConstant.WFR_SST, "verify");
         int ret = mFaceRequest.sendRequest(mImageData, mRequestListener);
         if (ErrorCode.SUCCESS != ret) {
             mProDialog.dismiss();
@@ -134,7 +153,9 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
         }
         if ("success".equals(obj.get("rst"))) {
             showTip("注册成功");
-            setResult();
+            //setResult();
+            //captrue();
+            isreg = true;
         } else {
             showTip("注册失败");
         }
@@ -242,6 +263,16 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
         camera_close.setOnClickListener(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void initReg() {
+        Bitmap bmp = BitmapFactory.decodeFile("/mnt/internal_sd/IMG_20171024_152551.jpg");
+        byte[] datas = BitmapUtils.getByteFromBitmap(bmp);
+        startRegFace(datas);
+    }
 
     @Override
     public void onClick(View v) {
@@ -388,7 +419,7 @@ public class CameraActivty extends Activity implements SurfaceHolder.Callback, V
                     //可根据流量及网络状况对图片进行压缩
                     mImage.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                     byte[] mImageData = baos.toByteArray();
-                    startRegOrVerify(mImageData);
+                    startVerify(mImageData);
                     if (mImage != null) {
                         mImage.recycle();
                     }

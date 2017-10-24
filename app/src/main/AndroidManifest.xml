@@ -69,13 +69,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".faceprint.OnlineFacePrintActivity" />
-        <activity android:name=".faceprint.CameraActivty"></activity>
+        <activity android:name=".faceprint.CameraActivty" />
         <activity
             android:name=".voiceprint.VoicePrintActivity"
-            android:theme="@style/AppTheme.NoTitle"></activity>
-        <activity android:name=".faceprint.FaceCameraActivity"></activity>
-        <activity android:name=".lockpattern.PatternLockActivity"></activity>
-        <activity android:name=".hepai.HePaiLvActivity"></activity>
+            android:theme="@style/AppTheme.NoTitle" />
+        <activity android:name=".faceprint.FaceCameraActivity" />
+        <activity android:name=".lockpattern.PatternLockActivity" />
+        <activity android:name=".hepai.HePaiLvActivity" />
+        <activity android:name=".faceprint.CameraBDActivty" />
     </application>
 
 </manifest>

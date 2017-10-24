@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ks.safe.login.faceprint.CameraActivty;
+import com.ks.safe.login.faceprint.CameraBDActivty;
 import com.ks.safe.login.fingerprint.FingerPrintDialog;
 import com.ks.safe.login.fingerprint.FingerPrintUtil;
 import com.ks.safe.login.fingerprint.FingerprintAlertDialog;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     Switch vface;
     Switch vvoice;
     Switch vgen;
+    Switch vface_bd;
     ImageView hepai;
     SharedPreferences sp;
     TextView fullTv;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public static String GESTURE = "gesture";
     public static String SAFE_LOGIN_TYPE = "safe_login_type";
     public static final int REQUEST_FACE = 0;
+    public static final int REQUEST_FACE_BD = 4;
     public static final int REQUEST_VOICE = 1;
     public static final int REQUEST_GESTURE = 3;
     private Toolbar toolbar;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         vface = (Switch) findViewById(R.id.vface);
         vvoice = (Switch) findViewById(R.id.vvoice);
         vgen = (Switch) findViewById(R.id.vgensture);
+        vface_bd = (Switch) findViewById(R.id.vface_bd);
         hepai = (ImageView) findViewById(R.id.hepai);
         fullTv = (TextView) findViewById(R.id.full);
         singleTv = (TextView) findViewById(R.id.letter);
@@ -174,6 +178,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        vface_bd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, CameraBDActivty.class);
+                    intent.putExtra("authid", "370101199901011234");
+                    startActivityForResult(intent, REQUEST_FACE_BD);
+                }
+            }
+        });
+
         //合拍率
         hepai.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,6 +240,28 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_FACE:
+                if (resultCode == RESULT_OK) {
+                    //注册
+                    if (data.getBooleanExtra("isreg", true)) {
+                        putSetting(FACE, true);
+                        putSettingString(SAFE_LOGIN_TYPE, FACE);
+                    } else {
+                        new FingerprintAlertDialog(this)
+                                .builder()
+                                .setTitle("刷脸成功")
+                                .setMsg("欢迎主人，宝宝给你请安了^_^")
+                                .setCancelable(false)
+                                .setNegativeButton("我知道了", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                    }
+                                })
+                                .show();
+                    }
+                }
+                break;
+            case REQUEST_FACE_BD:
                 if (resultCode == RESULT_OK) {
                     //注册
                     if (data.getBooleanExtra("isreg", true)) {
