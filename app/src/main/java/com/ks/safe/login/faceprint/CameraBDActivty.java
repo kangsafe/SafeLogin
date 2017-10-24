@@ -61,7 +61,7 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_camera_bd);
         initView();
         mAuthid = getIntent().getStringExtra("authid");
         // 在程序入口处传入appid，初始化SDK
@@ -73,14 +73,20 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
         service.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-                Log.i("ch", "sss");
+                Log.i("定时任务", "执行任务");
                 if (isreg) {
                     detectCaptrue();
-                } else {
-                    initReg();
+//                    captrue();
                 }
             }
-        }, 0, 2, TimeUnit.SECONDS);
+        }, 1, 2, TimeUnit.SECONDS);
+        initReg();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        service.shutdownNow();
     }
 
     private void showTip(final String str) {
@@ -344,12 +350,16 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
         }
     }
 
+    private boolean isChecked = false;
+
     private void detectCaptrue() {
         if (mCamera != null) {
             mCamera.takePicture(null, null, new Camera.PictureCallback() {
                 @Override
                 public void onPictureTaken(byte[] data, Camera camera) {
-                    Log.i("Size", data.length / 1024 + "KB");
+                    isChecked = true;
+                    startCamera();
+                    Log.i("检测", "Size" + data.length / 1024 + "KB");
                     try {
                         Bitmap mImage;
                         // 获取图片的宽和高
@@ -384,7 +394,8 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
-                        startCamera();
+                        isChecked = false;
+                        //startCamera();
                     }
                 }
             });
@@ -397,7 +408,9 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
         mCamera.takePicture(null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
-                Log.i("Size", data.length / 1024 + "KB");
+                isChecked = true;
+                Log.i("验证", "Size" + data.length / 1024 + "KB");
+                startCamera();
                 try {
                     Bitmap mImage;
                     // 获取图片的宽和高
@@ -428,7 +441,8 @@ public class CameraBDActivty extends Activity implements SurfaceHolder.Callback,
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    startCamera();
+                    isChecked = false;
+                    //startCamera();
                 }
             }
         });

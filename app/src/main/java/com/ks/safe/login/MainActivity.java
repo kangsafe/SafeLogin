@@ -264,23 +264,23 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_FACE_BD:
                 if (resultCode == RESULT_OK) {
                     //注册
-                    if (data.getBooleanExtra("isreg", true)) {
-                        putSetting(FACE, true);
-                        putSettingString(SAFE_LOGIN_TYPE, FACE);
-                    } else {
-                        new FingerprintAlertDialog(this)
-                                .builder()
-                                .setTitle("刷脸成功")
-                                .setMsg("欢迎主人，宝宝给你请安了^_^")
-                                .setCancelable(false)
-                                .setNegativeButton("我知道了", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
+//                    if (data.getBooleanExtra("isreg", true)) {
+//                        putSetting(FACE, true);
+//                        putSettingString(SAFE_LOGIN_TYPE, FACE);
+//                    } else {
+                    new FingerprintAlertDialog(this)
+                            .builder()
+                            .setTitle("刷脸成功")
+                            .setMsg("欢迎主人，宝宝给你请安了^_^")
+                            .setCancelable(false)
+                            .setNegativeButton("我知道了", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                                    }
-                                })
-                                .show();
-                    }
+                                }
+                            })
+                            .show();
+//                    }
                 }
                 break;
             case REQUEST_VOICE:
