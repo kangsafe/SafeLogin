@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Switch vvoice;
     Switch vgen;
     Switch vface_bd;
+    Switch vSetting;
     ImageView hepai;
     SharedPreferences sp;
     TextView fullTv;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         vvoice = (Switch) findViewById(R.id.vvoice);
         vgen = (Switch) findViewById(R.id.vgensture);
         vface_bd = (Switch) findViewById(R.id.vface_bd);
+        vSetting = (Switch) findViewById(R.id.vsetting);
         hepai = (ImageView) findViewById(R.id.hepai);
         fullTv = (TextView) findViewById(R.id.full);
         singleTv = (TextView) findViewById(R.id.letter);
@@ -186,6 +189,17 @@ public class MainActivity extends AppCompatActivity {
                     intent.setClass(MainActivity.this, CameraBDActivty.class);
                     intent.putExtra("authid", "370101199901011234");
                     startActivityForResult(intent, REQUEST_FACE_BD);
+                }
+            }
+        });
+        vSetting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String str = Util.getString(getApplicationContext(), getPackageName() + ".DM");
+                if (isChecked && str.isEmpty()) {
+                    Util.putString(getApplicationContext(), getPackageName() + ".DM", BuildConfig.DM);
+                } else {
+                    Log.i("UUID", getPackageName() + ".DM=" + str);
                 }
             }
         });

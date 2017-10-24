@@ -218,6 +218,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="setting数据库" />
+                    <!--android:switchMinWidth="44dp"：track使用的是宽度为48dp的圆角方形，此处值不大于48dp都可以-->
+                    <!--android:thumbTextPadding="16dp":thumb使用的的半径为16dp的圆-->
+                    <!--这里我们不需要thumb显示文字-->
+                    <Switch
+                        android:id="@+id/vsetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 

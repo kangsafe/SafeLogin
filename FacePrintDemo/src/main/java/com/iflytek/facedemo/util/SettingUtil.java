@@ -1,4 +1,4 @@
-package com.ks.safe.login;
+package com.iflytek.facedemo.util;
 
 /**
  * Created by Administrator on 2017/6/23.
@@ -12,7 +12,7 @@ import android.view.WindowManager;
 /**
  * Created by liruiyuan on 2015/12/21.
  */
-public class Util {
+public class SettingUtil {
 
     static public int getScreenWidthPixels(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
