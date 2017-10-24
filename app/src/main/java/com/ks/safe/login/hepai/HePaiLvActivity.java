@@ -50,7 +50,7 @@ public class HePaiLvActivity extends AppCompatActivity {
                     }
                     ss = tt;
                 }
-                result.setText("合拍率：" + ss[0] + ss[1] + "%");
+                result.setText("合拍率：" + (ss[0].equals("0") ? "" : ss[0]) + ss[1] + "%");
             }
         });
     }
