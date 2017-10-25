@@ -1,3 +1,5 @@
 include ':app', ':fingerprintdemo', ':lockpattern'
 include ':VoicePrintDemo'
 include ':FacePrintDemo'
+include ':openCVLibrary320'
+include ':openCVfacedetection'

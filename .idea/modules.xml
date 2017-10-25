@@ -9,6 +9,8 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/fingerprintdemo/fingerprintdemo.iml" filepath="$PROJECT_DIR$/fingerprintdemo/fingerprintdemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/lockpattern/lockpattern.iml" filepath="$PROJECT_DIR$/lockpattern/lockpattern.iml" />
+      <module fileurl="file://$PROJECT_DIR$/openCVLibrary320/openCVLibrary320.iml" filepath="$PROJECT_DIR$/openCVLibrary320/openCVLibrary320.iml" />
+      <module fileurl="file://$PROJECT_DIR$/openCVfacedetection/openCVfacedetection.iml" filepath="$PROJECT_DIR$/openCVfacedetection/openCVfacedetection.iml" />
     </modules>
   </component>
 </project>
