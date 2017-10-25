@@ -60,4 +60,8 @@ android {
 
 dependencies {
     compile project(':openCVLibrary320')
+    compile 'org.bytedeco:javacv:1.3.3'
+//    compile 'org.bytedeco:javacpp:1.3.3'
+//    compile 'org.bytedeco.javacpp-presets:opencv:3.2.0-1.3'
+    compile 'org.bytedeco.javacpp-presets:opencv-platform:3.2.0-1.3'
 }
